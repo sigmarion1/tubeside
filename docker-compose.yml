@@ -1,8 +1,10 @@
 version: "3"
 
 services:
-  back:
+  tubeside:
     build: ./
     restart: always
-    ports:
-      - "4001:4000"
+networks:
+  default:
+    external:
+      name: external-network
