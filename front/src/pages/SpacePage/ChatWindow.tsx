@@ -89,13 +89,13 @@ const ChatWindow = ({ socket, currentUserName, spaceId }: ChatWindowProps) => {
     chatEndRef.current?.scrollIntoView({
       behavior: "smooth",
       block: "nearest",
-      // inline: "start",
+      inline: "start",
     });
   };
 
   useEffect(() => {
     socket.on("client:chat:receive", ({ userName, body, time }) => {
-      setChatList([...chatList, { userName, body, time }].slice(0, 200));
+      setChatList([...chatList, { userName, body, time }]);
     });
     scrollToBottom();
   }, [chatList]);
