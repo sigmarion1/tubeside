@@ -46,7 +46,7 @@ app.options('*', cors());
 // app.use(passport.initialize());
 // passport.use('jwt', jwtStrategy);
 
-app.use(express.static('build'));
+app.use(express.static(path.join(__dirname, 'build')));
 
 // app.use(express.static(__dirname + 'build'));
 
@@ -58,19 +58,19 @@ if (config.env === 'production') {
 // v1 api routes
 app.use('/v1', routes);
 
-app.get('/', function (req, res) {
-  res.sendFile('index.html', { root: path.join(__dirname + '/build/') });
+app.get('*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 // // send back a 404 error for any unknown api request
-// app.use((req, res, next) => {
-//   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
-// });
+app.use((req, res, next) => {
+  next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
+});
 
 // convert error to ApiError, if needed
-// app.use(errorConverter);
+app.use(errorConverter);
 
 // handle error
-// app.use(errorHandler);
+app.use(errorHandler);
 
 module.exports = app;
