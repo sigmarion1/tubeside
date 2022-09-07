@@ -35,7 +35,7 @@ export const App = () => (
       <Route path="/space/:spaceId" element={<SpacePage />} />
       <Route path="/create-space" element={<SpaceCreatePage />} />
       <Route path="/about" element={<AboutPage />} />
-      <Route path="*" element={<NotFoundPage />} />
+      <Route path="/*" element={<NotFoundPage />} />
     </Routes>
   </ChakraProvider>
 );
