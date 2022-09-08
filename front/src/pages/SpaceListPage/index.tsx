@@ -43,7 +43,7 @@ import Page from "./Page";
 
 const SpaceListPage = () => {
   const [cnt, setCnt] = useState(1);
-  const [isActiveOnly, setIsActiveOnly] = useState(true);
+  const [isActiveOnly, setIsActiveOnly] = useState(false);
   const { totalPages } = useSpaces(1, isActiveOnly);
 
   const pages = [];
@@ -60,9 +60,9 @@ const SpaceListPage = () => {
 
   return (
     <Container maxW={"5xl"} pt={2}>
-      <Checkbox p={2} isChecked={isActiveOnly} onChange={handleChange}>
+      {/* <Checkbox p={2} isChecked={isActiveOnly} onChange={handleChange}>
         Show only active spaces
-      </Checkbox>
+      </Checkbox> */}
       <Stack>{pages}</Stack>
       {!isLastPage && (
         <Button
