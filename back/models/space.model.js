@@ -2,6 +2,15 @@ const { nanoid } = require('nanoid');
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
+const userSchema = mongoose.Schema({
+  name: {
+    type: String,
+  },
+  id: {
+    type: String,
+  },
+});
+
 const spaceSchema = mongoose.Schema(
   {
     _id: {
@@ -30,9 +39,21 @@ const spaceSchema = mongoose.Schema(
     syncUser: {
       type: String,
     },
+    userList: {
+      type: [userSchema],
+    },
     isActive: {
       type: Boolean,
       default: false,
+    },
+    playerState: {
+      type: Number,
+    },
+    currentTime: {
+      type: Number,
+    },
+    playbackRate: {
+      type: Number,
     },
   },
   {

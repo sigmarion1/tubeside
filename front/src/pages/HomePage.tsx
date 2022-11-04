@@ -68,9 +68,9 @@ export default function CallToActionWithAnnotation() {
             </Button>
 
             <Text p={5}> OR</Text>
-            <div>
+            {/* <div>
               {spaces && <SpaceCard space={spaces[randomSpaceNumber]} />}
-            </div>
+            </div> */}
 
             <Button
               as={ReachLink}

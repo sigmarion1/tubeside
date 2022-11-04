@@ -47,6 +47,7 @@ const SpaceCard = ({ space }: SpaceProps) => {
     users,
     syncUser,
     userCount,
+    userList,
   } = space;
 
   const videoImage = currentVideoId
@@ -75,7 +76,7 @@ const SpaceCard = ({ space }: SpaceProps) => {
               </Box>
 
               <Box fontSize="xs" noOfLines={1}>
-                {userCount} watching
+                {userList.length} watching
               </Box>
             </Stack>
 

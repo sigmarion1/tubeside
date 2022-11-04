@@ -37,13 +37,18 @@ import SpaceCard from "./SpaceCard";
 import useSpaces from "../../hooks/useSpaces";
 import { useState } from "react";
 
+type user = {
+  id: string;
+  name: string;
+};
+
 export type SpaceType = {
   [key: string]: any; // 👈️ allows dynamic keys and values
   id: string;
   name: string;
   currentVideoId: string | null;
   currentVideoName: string | null;
-  users: string[];
+  userList: user[];
   userCount: number;
   syncUser: string;
 };

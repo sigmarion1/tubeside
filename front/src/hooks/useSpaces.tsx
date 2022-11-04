@@ -6,7 +6,7 @@ const useSpaces = (page: number, isActiveOnly: boolean) => {
   const params: any = {
     page,
     isPrivate: false,
-    sortBy: "userCount:desc,currentVideoId:desc",
+    sortBy: "userCount:desc",
   };
 
   if (isActiveOnly) {

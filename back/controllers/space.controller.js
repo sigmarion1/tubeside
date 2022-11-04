@@ -10,7 +10,8 @@ const createSpace = catchAsync(async (req, res) => {
 });
 
 const getSpaces = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['isPrivate', 'isActive']);
+  const filter = pick(req.query, ['isPrivate']);
+  filter['currentVideoId'] = { $ne: null };
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await spaceService.querySpaces(filter, options);
   res.send(result);

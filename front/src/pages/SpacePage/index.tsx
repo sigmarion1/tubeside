@@ -8,7 +8,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import socketIOClient from "socket.io-client";
 import useSpace from "../../hooks/useSpace";
 
@@ -35,27 +35,22 @@ const SpacePage = () => {
 
   const { spaceId } = useParams();
   const [currentUserName, setCurrentUserName] = useState<string>("");
-  // const [isSyncUser, setIsSyncUser] = useState<boolean>(false);
+  const [isSyncUser, setIsSyncUser] = useState<boolean>(false);
   const [userList, setUserList] = useState<string[]>([]);
 
   const { space, isLoading, isError, mutate } = useSpace(spaceId || "");
-  const isSyncUser = space ? currentUserName === space.syncUser : false;
+  // const isSyncUser = space ? currentUserName === space.syncUser : false;
 
   const youtubePlayer = useRef<YouTube>(null);
 
   const [currentHeight, setCurrentHeight] = useState<number>(0);
 
   useEffect(() => {
-    socket.on("client:space:joinSuccess", (userName) => {
-      setCurrentUserName(userName);
-    });
-
-    socket.on("client:space:userChange", (userList) => {
-      setUserList(userList);
+    socket.on("client:video:change", () => {
       mutate();
     });
 
-    socket.on("client:video:change", () => {
+    socket.on("client:space:userChange", () => {
       mutate();
     });
 
@@ -72,21 +67,42 @@ const SpacePage = () => {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (isSyncUser) {
-        sendVideoSync();
-      }
-    }, 2000);
+    // const interval = setInterval(() => {
+    //   if (isSyncUser) {
+    //     sendVideoSync();
+    //   }
+    // }, 2000);
 
     socket.on("client:video:sync", (syncData) => {
+      // console.log(isSyncUser);
       if (!isSyncUser) {
+        // console.log("sync");
         receiveVideoSync(syncData);
       }
     });
 
+    socket.on("client:space:joinSuccess", ({ userName, syncUser }) => {
+      setCurrentUserName(userName);
+      if (userName === syncUser) {
+        console.log(userName, syncUser);
+        setIsSyncUser(true);
+      }
+    });
+
     return () => {
-      clearInterval(interval);
+      // clearInterval(interval);
       socket.off("client:video:sync");
+      socket.off("client:space:joinSuccess");
+    };
+  }, [isSyncUser, currentUserName]);
+
+  useEffect(() => {
+    socket.on("client:space:youAreSyncUser", () => {
+      setIsSyncUser(true);
+    });
+    return () => {
+      // clearInterval(interval);
+      socket.off("client:space:youAreSyncUser");
     };
   }, [isSyncUser]);
 
@@ -107,22 +123,26 @@ const SpacePage = () => {
 
   const setVideoChange = async (videoId: string) => {
     socket.emit("video:change", spaceId, videoId);
+    sendVideoSync();
   };
 
   const sendVideoSync = async () => {
-    try {
-      const currentTime =
-        await youtubePlayer?.current?.internalPlayer?.getCurrentTime();
-      const playerState =
-        await youtubePlayer?.current?.internalPlayer?.getPlayerState();
-      const playbackRate =
-        await youtubePlayer?.current?.internalPlayer?.getPlaybackRate();
+    if (isSyncUser) {
+      console.log("send");
+      try {
+        const currentTime =
+          await youtubePlayer?.current?.internalPlayer?.getCurrentTime();
+        const playerState =
+          await youtubePlayer?.current?.internalPlayer?.getPlayerState();
+        const playbackRate =
+          await youtubePlayer?.current?.internalPlayer?.getPlaybackRate();
 
-      const syncData = { playerState, currentTime, playbackRate };
+        const syncData = { playerState, currentTime, playbackRate };
 
-      socket.emit("video:sync", spaceId, syncData);
-    } catch (e) {
-      console.log(e);
+        socket.emit("video:sync", spaceId, syncData);
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 
@@ -192,6 +212,8 @@ const SpacePage = () => {
                 ref={youtubePlayer}
                 opts={variantOpts}
                 onReady={() => setCurrentHeight(getCurrentYoutubeBoxHeight())}
+                onStateChange={() => sendVideoSync()}
+                onPlaybackRateChange={() => sendVideoSync()}
                 // style={{ display: "flex", height: "100vh", width: "100%" }}
 
                 // onPause={(e) => console.log(e.target.getPlayerState)}
@@ -211,7 +233,7 @@ const SpacePage = () => {
           <SpaceInfo
             name={space.name}
             currentVideoName={space.currentVideoName}
-            userList={userList}
+            userList={space.userList}
             syncUser={space.syncUser}
             currentUserName={currentUserName}
             setVideoChange={setVideoChange}

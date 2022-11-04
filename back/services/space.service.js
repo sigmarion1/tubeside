@@ -25,6 +25,7 @@ const createSpace = async (spaceBody) => {
  */
 const querySpaces = async (filter, options) => {
   const spaces = await Space.paginate(filter, options);
+  console.log(options);
   return spaces;
 };
 

@@ -3,9 +3,14 @@ import { Box, Heading, Stack, Text } from "@chakra-ui/react";
 import UserBadge from "./UserBadge";
 import VideoChangeForm from "./VideoChangeForm";
 
+type User = {
+  name: string;
+  id: string;
+};
+
 interface spaceInfoProps {
   name: string;
-  userList: string[];
+  userList: User[];
   syncUser: string;
   currentVideoName: string;
   currentUserName: string;
@@ -60,11 +65,11 @@ const SpaceInfo = ({
           // p={1}
           //   bg={useColorModeValue("gray.400", "gray.600")}
         >
-          {userList.map((userName, index) => (
+          {userList.map((user, index) => (
             <UserBadge
-              userName={userName}
+              userName={user.name}
               currentUserName={currentUserName}
-              isSyncUser={userName === syncUser}
+              isSyncUser={user.name === syncUser}
               key={index}
             />
           ))}

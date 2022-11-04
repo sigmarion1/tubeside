@@ -18,10 +18,38 @@ const io = require('socket.io')(server, {
   },
 });
 
+const syncer = {
+  syncList: {},
+  doSync: function () {
+    console.log(this.syncList);
+    for (const spaceId in this.syncList) {
+      if (this.syncList[spaceId].playerState === 1) {
+        this.syncList[spaceId].currentTime += 1 * this.syncList[spaceId].playbackRate;
+      }
+      io.to(spaceId).emit('client:video:sync', this.syncList[spaceId]);
+    }
+  },
+  initSync: function (spaceId) {
+    this.syncList[spaceId] = {
+      playerState: 0,
+      currentTime: 0,
+      playbackRate: 1,
+    };
+  },
+  changeSync: function (spaceId, syncData) {
+    this.syncList[spaceId] = syncData;
+  },
+  removeSync: function (spaceId) {
+    delete this.syncList[spaceId];
+  },
+};
+
+setInterval(() => syncer.doSync(), 1000);
+
 io.on('connection', (socket) => {
-  spaceHandler(io, socket);
+  spaceHandler(io, socket, syncer);
   chatHandler(io, socket);
-  videoHandler(io, socket);
+  videoHandler(io, socket, syncer);
 });
 
 instrument(io, {

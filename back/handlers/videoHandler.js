@@ -1,7 +1,7 @@
 const { spaceService } = require('../services');
 const axios = require('axios').default;
 
-module.exports = (io, socket) => {
+module.exports = (io, socket, syncer) => {
   const changeVideo = async (spaceId, videoId) => {
     const space = await spaceService.getSpaceById(spaceId);
 
@@ -22,6 +22,7 @@ module.exports = (io, socket) => {
 
       await space.save();
 
+      syncer.initSync(spaceId);
       io.to(spaceId).emit('client:video:change');
       io.to(spaceId).emit('client:chat:receive', { userName: 'System', body: `Video Changed : ${title}`, time: new Date() });
     } catch (e) {
@@ -30,7 +31,7 @@ module.exports = (io, socket) => {
   };
 
   const syncVideo = async (spaceId, syncData) => {
-    io.to(spaceId).emit('client:video:sync', syncData);
+    syncer.changeSync(spaceId, syncData);
   };
 
   socket.on('video:change', changeVideo);
