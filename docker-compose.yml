@@ -4,7 +4,7 @@ services:
   tubeside:
     build: ./
     restart: always
-networks:
-  default:
-    external:
-      name: external-network
+# networks:
+#   default:
+#     external:
+#       name: external-network
