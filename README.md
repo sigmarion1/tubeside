@@ -1,14 +1,18 @@
 ![Alt text](front/build/ogImage.png)
 
-# Project Title
+# TUBE SIDE
 
-Simple overview of use/purpose.
+Service for watching youtube clip togeter.
 
 ### live in https://tubeside.app !!
 
 ## Description
 
-- An in-depth paragraph about your project and overview of use.
+- TubeSide is website for share youtube videos with other people.
+- The manager can sync video with other people.
+- So every people in the same space can view the same screen at the same time.
+- Also, we provied the private space with invited people.
+- Just create private space and share the link. No login required.
 
 ## Getting Started
 
@@ -69,13 +73,6 @@ Any advise for common problems or issues.
 ```
 
 - In production, express server is serving build front-end files and api both, there are no issue.
-
-Websocket proxy is not work propery.
-
-```
-In local development enviroment, Websocket proxy is not work propery
-command to run if program contains helper info
-```
 
 ## Authors
 
