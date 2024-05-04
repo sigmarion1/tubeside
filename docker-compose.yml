@@ -4,7 +4,5 @@ services:
   tubeside:
     build: ./
     restart: always
-# networks:
-#   default:
-#     external:
-#       name: external-network
+    ports:
+      - "8001:4000"
