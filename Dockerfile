@@ -1,7 +1,7 @@
 FROM node
 RUN mkdir -p /usr/src/app && chown -R node:node /usr/src/app
 
-ENV GENERATE_SOURCEMAP false
+ENV NODE_OPTIONS=--max_old_space_size=1024
 
 WORKDIR /usr/src/app
 
